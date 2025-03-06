@@ -23,7 +23,7 @@ public class UserModel {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
-    private Set<RoleModel> roleModels;
+    private Set<UserRoleModel> userRoleModels;
     public UserModel() {
 
     }

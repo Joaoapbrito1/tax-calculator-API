@@ -7,17 +7,17 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name = "roles")
-public class RoleModel {
+public class UserRoleModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
-    public RoleModel(String name) {
+    public UserRoleModel(String name) {
         this.name = name;
     }
 
-    public RoleModel() {
+    public UserRoleModel() {
     }
 }
