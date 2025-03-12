@@ -38,11 +38,8 @@ public class SecurityConfig {
 
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) -> {
-                    authorize.requestMatchers("/api/auth/login").permitAll();
-                    authorize.requestMatchers(HttpMethod.POST, "/api/user/register").permitAll();
-                    authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-                    authorize.requestMatchers(HttpMethod.GET, "/api/user").authenticated();
-                    authorize.requestMatchers(HttpMethod.GET, "/api/admin").hasRole("ADMIN");
+                    authorize.requestMatchers("/user/login").permitAll();
+                    authorize.requestMatchers( "/user/register").permitAll();
                     authorize.anyRequest().authenticated();
                 }).httpBasic(Customizer.withDefaults());
 
