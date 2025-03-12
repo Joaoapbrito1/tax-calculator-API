@@ -55,23 +55,14 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            Jws<Claims> claimsJws = Jwts.parserBuilder()
+            Jwts.parserBuilder()
                     .setSigningKey(key())
                     .build()
                     .parseClaimsJws(token);
-
-            return !claimsJws.getBody().getExpiration().before(new Date());
-        } catch (ExpiredJwtException ex) {
-            System.out.println("Token expirado: " + ex.getMessage());
-        } catch (UnsupportedJwtException ex) {
-            System.out.println("Token não suportado: " + ex.getMessage());
-        } catch (MalformedJwtException ex) {
-            System.out.println("Token mal formado: " + ex.getMessage());
-        } catch (SignatureException ex) {
-            System.out.println("Assinatura inválida: " + ex.getMessage());
-        } catch (IllegalArgumentException ex) {
-            System.out.println("Token vazio: " + ex.getMessage());
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
         }
-        return false;
     }
 }
