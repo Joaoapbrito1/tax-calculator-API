@@ -2,6 +2,7 @@ package br.com.tax_calculator_API.services;
 
 import br.com.tax_calculator_API.dtos.UserResponseDTO;
 import br.com.tax_calculator_API.infra.jwt.JwtTokenProvider;
+import br.com.tax_calculator_API.services.impl.AuthUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;

@@ -3,8 +3,8 @@ package br.com.tax_calculator_API.services;
 import br.com.tax_calculator_API.dtos.JwtResponseDTO;
 import br.com.tax_calculator_API.dtos.UserLoginDTO;
 import br.com.tax_calculator_API.infra.jwt.JwtTokenProvider;
-import br.com.tax_calculator_API.models.UserModel;
 import br.com.tax_calculator_API.repository.UserRepository;
+import br.com.tax_calculator_API.services.impl.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,9 +30,6 @@ public class AuthServiceImpl implements AuthService {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        UserModel user = userRepository.findByUsername(userLoginDTO.getUsername())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         String token = jwtTokenProvider.generateToken(authentication);
 
