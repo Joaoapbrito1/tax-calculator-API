@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
 
     @Value("${jwt.secret:defaultSecretKey}")
-    private String jwtSecret;
+    String jwtSecret;
 
-    @Value("${jwt.expiration:300000}")
-    private long jwtExpirationDate;
+    @Value("${jwt.expiration:3600000}")
+    long jwtExpirationDate;
 
     private Key key() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
@@ -54,15 +54,12 @@ public class JwtTokenProvider {
     }
 
     public boolean validateToken(String token) {
-        try {
+
             Jwts.parserBuilder()
                     .setSigningKey(key())
                     .build()
-                    .parseClaimsJws(token);
-            return true;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return false;
-        }
+                    .parse(token);
+        return true;
+
     }
 }
