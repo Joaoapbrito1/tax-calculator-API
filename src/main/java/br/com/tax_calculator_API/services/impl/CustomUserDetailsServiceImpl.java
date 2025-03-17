@@ -1,4 +1,4 @@
-package br.com.tax_calculator_API.services;
+package br.com.tax_calculator_API.services.impl;
 
 import br.com.tax_calculator_API.models.UserModel;
 import br.com.tax_calculator_API.repository.UserRepository;

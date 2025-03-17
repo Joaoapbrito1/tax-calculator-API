@@ -1,4 +1,4 @@
-package br.com.tax_calculator_API.services;
+package br.com.tax_calculator_API.services.impl;
 
 
 import br.com.tax_calculator_API.dtos.UserRequestDTO;
@@ -6,7 +6,7 @@ import br.com.tax_calculator_API.models.UserModel;
 import br.com.tax_calculator_API.models.UserRoleModel;
 import br.com.tax_calculator_API.repository.UserRepository;
 import br.com.tax_calculator_API.repository.UserRoleRepository;
-import br.com.tax_calculator_API.services.impl.UserService;
+import br.com.tax_calculator_API.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
