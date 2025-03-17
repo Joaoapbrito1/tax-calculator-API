@@ -5,6 +5,7 @@ import br.com.tax_calculator_API.enums.UserRole;
 import br.com.tax_calculator_API.models.UserModel;
 import br.com.tax_calculator_API.repository.UserRepository;
 import br.com.tax_calculator_API.repository.UserRoleRepository;
+import br.com.tax_calculator_API.services.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
