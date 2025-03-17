@@ -3,6 +3,7 @@ package br.com.tax_calculator_API.services;
 import br.com.tax_calculator_API.models.UserModel;
 import br.com.tax_calculator_API.models.UserRoleModel;
 import br.com.tax_calculator_API.repository.UserRepository;
+import br.com.tax_calculator_API.services.impl.CustomUserDetailsServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
