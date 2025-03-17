@@ -1,10 +1,10 @@
-package br.com.tax_calculator_API.services;
+package br.com.tax_calculator_API.services.impl;
 
 import br.com.tax_calculator_API.dtos.JwtResponseDTO;
 import br.com.tax_calculator_API.dtos.UserLoginDTO;
 import br.com.tax_calculator_API.infra.jwt.JwtTokenProvider;
 import br.com.tax_calculator_API.repository.UserRepository;
-import br.com.tax_calculator_API.services.impl.AuthService;
+import br.com.tax_calculator_API.services.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
