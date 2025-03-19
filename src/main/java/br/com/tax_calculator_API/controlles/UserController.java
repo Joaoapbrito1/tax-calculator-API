@@ -21,44 +21,44 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
-@Tag(name = "Usuarios", description = "Controle de usuarios")
+@Tag(name = "Users", description = "User management")
 @SecurityRequirement(name = SwaggerConfig.SECURITY)
 public class UserController {
 
     private final UserServiceImpl userServiceImpl;
     private final AuthService authService;
 
-    @PostMapping("/register")
     @Operation(
-            summary = "Registra usuario.",
-            description = "Método para cadastrar um usuario",
+            summary = "Register user.",
+            description = "Method to register a new user",
             responses = {
-                    @ApiResponse(responseCode = "201", description = "Usuario cadastrado com sucesso."),
-                    @ApiResponse(responseCode = "400", description = "Usuario ja cadastrado.", content = @Content),
-                    @ApiResponse(responseCode = "500", description = "Erro interno no servidor.", content = @Content)
+                    @ApiResponse(responseCode = "201", description = "User successfully registered."),
+                    @ApiResponse(responseCode = "400", description = "User already registered.", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content)
             }
     )
+    @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody UserRequestDTO userRequestDTO) {
         try {
             userServiceImpl.registerUser(userRequestDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Usuario cadastrado com sucesso.");
+            return ResponseEntity.status(HttpStatus.CREATED).body("User successfully registered.");
         } catch (UserAlreadyExistsException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario ja cadastrado.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User already registered.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar usuario.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error registering user.");
         }
     }
 
-    @PostMapping("/login")
     @Operation(
-            summary = "Login usuario.",
-            description = "Método para o usuario logar.",
+            summary = "User login.",
+            description = "Method for user authentication.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Usuario logado com sucesso.",
+                    @ApiResponse(responseCode = "200", description = "User successfully logged in.",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtResponseDTO.class))),
-                    @ApiResponse(responseCode = "400", description = "Esse usuario não existe.", content = @Content)
+                    @ApiResponse(responseCode = "400", description = "User does not exist.", content = @Content)
             }
     )
+    @PostMapping("/login")
     public ResponseEntity<JwtResponseDTO> login(@RequestBody UserLoginDTO userLoginDTO) {
         JwtResponseDTO jwtResponseDTO = authService.login(userLoginDTO);
         return new ResponseEntity<>(jwtResponseDTO, HttpStatus.OK);
