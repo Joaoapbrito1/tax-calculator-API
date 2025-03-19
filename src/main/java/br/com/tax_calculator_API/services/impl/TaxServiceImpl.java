@@ -1,13 +1,12 @@
 package br.com.tax_calculator_API.services.impl;
 
-import br.com.tax_calculator_API.dtos.TaxCalculationRequestDTO;
-import br.com.tax_calculator_API.dtos.TaxCalculationResponseDTO;
-import br.com.tax_calculator_API.dtos.TaxRequestDTO;
-import br.com.tax_calculator_API.dtos.TaxResponseDTO;
+import br.com.tax_calculator_API.dtos.*;
+import br.com.tax_calculator_API.exeptions.TaxAlreadyExistsException;
+import br.com.tax_calculator_API.exeptions.TaxInvalidDataException;
+import br.com.tax_calculator_API.exeptions.TaxNotFoundException;
 import br.com.tax_calculator_API.models.TaxModel;
 import br.com.tax_calculator_API.repository.TaxRepository;
 import br.com.tax_calculator_API.services.TaxService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +26,19 @@ public class TaxServiceImpl implements TaxService {
 
     @Override
     public List<TaxResponseDTO> createTaxes(List<TaxRequestDTO> taxRequestDTOs) {
+        if (taxRequestDTOs.isEmpty()) {
+            throw new TaxInvalidDataException("The tax list cannot be empty.");
+        }
+
         List<TaxModel> taxModels = taxRequestDTOs.stream()
                 .map(this::mapToTaxModel)
                 .collect(Collectors.toList());
+
+        for (TaxModel taxModel : taxModels) {
+            if (taxRepository.findByName(taxModel.getName()).isPresent()) {
+                throw new TaxAlreadyExistsException("Tax already registered.");
+            }
+        }
 
         List<TaxModel> savedTaxes = taxRepository.saveAll(taxModels);
 
@@ -53,7 +62,7 @@ public class TaxServiceImpl implements TaxService {
     @Override
     public void deleteTax(Long id) {
         if (!taxRepository.existsById(id)) {
-            throw new EntityNotFoundException("Tax not found with id: " + id);
+            throw new TaxNotFoundException("Tax not found with ID " + id);
         }
         taxRepository.deleteById(id);
     }
@@ -61,7 +70,7 @@ public class TaxServiceImpl implements TaxService {
     @Override
     public TaxResponseDTO updateTax(Long id, TaxRequestDTO taxRequestDTO) {
         TaxModel existingTaxModel = taxRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tax not found with id: " + id));
+                .orElseThrow(() -> new TaxNotFoundException("Tax not found with ID: " + id));
 
         existingTaxModel.setName(taxRequestDTO.getName());
         existingTaxModel.setDescription(taxRequestDTO.getDescription());
@@ -70,7 +79,8 @@ public class TaxServiceImpl implements TaxService {
         TaxModel updatedTaxModel = taxRepository.save(existingTaxModel);
         return convertToResponseDTO(updatedTaxModel);
     }
-    private TaxModel mapToTaxModel(TaxRequestDTO taxRequestDTO) {
+
+    public TaxModel mapToTaxModel(TaxRequestDTO taxRequestDTO) {
         TaxModel taxModel = new TaxModel();
         taxModel.setName(taxRequestDTO.getName());
         taxModel.setDescription(taxRequestDTO.getDescription());
@@ -89,7 +99,7 @@ public class TaxServiceImpl implements TaxService {
     @Override
     public TaxCalculationResponseDTO calculateTax(TaxCalculationRequestDTO taxCalculationRequestDTO) {
         TaxModel taxModel = taxRepository.findById(taxCalculationRequestDTO.getTaxTypeId())
-                .orElseThrow(() -> new EntityNotFoundException("Imposto não encontrado com ID: " + taxCalculationRequestDTO.getTaxTypeId()));
+                .orElseThrow(() -> new TaxNotFoundException("Tax not found with ID " + taxCalculationRequestDTO.getTaxTypeId()));
 
         Double valueTax = (taxModel.getAliquot() / 100) * taxCalculationRequestDTO.getValueBase();
 
@@ -101,5 +111,4 @@ public class TaxServiceImpl implements TaxService {
 
         return responseDTO;
     }
-
 }
