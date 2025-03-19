@@ -1,7 +1,7 @@
 package br.com.tax_calculator_API.exeptions;
 
-public class InvalidTaxDataException extends RuntimeException {
-    public InvalidTaxDataException(String message) {
+public class TaxInvalidDataException extends RuntimeException {
+    public TaxInvalidDataException(String message) {
         super(message);
     }
 }
