@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="main" type="Application" factoryName="Application">
+    <envs>
+      <env name="DB_HOST" value="localhost" />
+      <env name="DB_NAME" value="calculadora_imposto" />
+      <env name="DB_PASSWORD" value="senha123" />
+      <env name="DB_URL" value="jdbc:postgresql://localhost:5432/calculadora_imposto" />
+      <env name="DB_USER" value="postgres" />
+      <env name="JWT_SECRET" value="Cc1TqqOVLIjj/cSggo22/wFZYJpLT5WNnrpwmCgdQK9ruAaSiWSf1D+EqtvlsP393FOOgJcYSnXQBt3yM4/m+Q==" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="br.com.tax_calculator_API.TaxCalculatorApiApplication" />
+    <module name="tax-calculator-API" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

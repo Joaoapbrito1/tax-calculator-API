@@ -9,5 +9,9 @@ class TaxCalculatorApiApplicationTests {
 	@Test
 	void contextLoads() {
 	}
+	@Test
+	void testMain() {
+		TaxCalculatorApiApplication.main(new String[] {});
+	}
 
 }
