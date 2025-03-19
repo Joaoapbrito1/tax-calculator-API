@@ -1,8 +1,8 @@
 package br.com.tax_calculator_API.services;
 
 import br.com.tax_calculator_API.dtos.UserResponseDTO;
-import br.com.tax_calculator_API.exeptions.InvalidDataException;
-import br.com.tax_calculator_API.exeptions.ResourceNotFoundException;
+import br.com.tax_calculator_API.exeptions.UserInvalidDataException;
+import br.com.tax_calculator_API.exeptions.UserResourceNotFoundException;
 import br.com.tax_calculator_API.exeptions.UserNotAuthenticatedException;
 import br.com.tax_calculator_API.infra.jwt.JwtTokenProvider;
 import br.com.tax_calculator_API.services.impl.AuthUserServiceImpl;
@@ -54,8 +54,7 @@ class AuthUserServiceImplTest {
             throw new RuntimeException(e);
         }
 
-        assertNotNull(response);
-        assertEquals("Bem-vindo, testUser!", response.getMessage());
+        assertEquals("Welcome, testUser!", response.getMessage());
     }
 
     @Test
@@ -73,7 +72,7 @@ class AuthUserServiceImplTest {
 
         String response = authUserService.adminAccess();
 
-        assertEquals("Acesso admin", response);
+        assertEquals("Admin access", response);
     }
 
     @Test
@@ -81,11 +80,26 @@ class AuthUserServiceImplTest {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getAuthorities()).thenReturn((Collection) Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
 
-        assertThrows(InvalidDataException.class, () -> authUserService.adminAccess());
+        assertThrows(UserInvalidDataException.class, () -> authUserService.adminAccess());
     }
 
     @Test
     void deleteResource_ShouldThrowException_WhenResourceDoesNotExist() {
-        assertThrows(ResourceNotFoundException.class, () -> authUserService.deleteResource(1L));
+        assertThrows(UserResourceNotFoundException.class, () -> authUserService.deleteResource(1L));
+    }
+
+    @Test
+    void getUserInfo_ShouldThrowException_WhenAuthenticationIsNull() {
+        when(securityContext.getAuthentication()).thenReturn(null);
+
+        assertThrows(UserNotAuthenticatedException.class, () -> authUserService.getUserInfo("dummyToken"));
+    }
+
+    @Test
+    void getUserInfo_ShouldThrowException_WhenAuthenticationIsNotAuthenticated() {
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.isAuthenticated()).thenReturn(false);
+
+        assertThrows(UserNotAuthenticatedException.class, () -> authUserService.getUserInfo("dummyToken"));
     }
 }
