@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 @Configuration
 @EnableMethodSecurity
@@ -24,10 +25,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private UserDetailsService userDetailsService;
-
     private JwtAuthenticationEntryPoint authenticationEntryPoint;
-
     private JwtAuthenticationFilter authenticationFilter;
+    private AccessDeniedHandler accessDeniedHandler;
 
     @Bean
     public static PasswordEncoder passwordEncoder(){
@@ -52,7 +52,9 @@ public class SecurityConfig {
                 }).httpBasic(Customizer.withDefaults());
 
         http.exceptionHandling( exception -> exception
-                .authenticationEntryPoint(authenticationEntryPoint));
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .accessDeniedHandler(accessDeniedHandler)
+        );
 
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
