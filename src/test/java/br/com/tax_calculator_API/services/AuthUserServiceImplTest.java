@@ -1,27 +1,26 @@
 package br.com.tax_calculator_API.services;
 
 import br.com.tax_calculator_API.dtos.UserResponseDTO;
+import br.com.tax_calculator_API.exeptions.UserInvalidDataException;
+import br.com.tax_calculator_API.exeptions.UserResourceNotFoundException;
+import br.com.tax_calculator_API.exeptions.UserNotAuthenticatedException;
 import br.com.tax_calculator_API.infra.jwt.JwtTokenProvider;
+import br.com.tax_calculator_API.services.impl.AuthUserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
+import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class AuthUserServiceImplTest {
 
     @Mock
@@ -33,53 +32,74 @@ class AuthUserServiceImplTest {
     @Mock
     private Authentication authentication;
 
-    @InjectMocks
     private AuthUserServiceImpl authUserService;
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
+        authUserService = new AuthUserServiceImpl(jwtTokenProvider);
         SecurityContextHolder.setContext(securityContext);
     }
 
     @Test
-    void authenticatedUser() {
+    void getUserInfo_ShouldReturnUserInfo_WhenUserIsAuthenticated() {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.isAuthenticated()).thenReturn(true);
         when(authentication.getName()).thenReturn("testUser");
 
-        UserResponseDTO response = authUserService.getUserInfo("token");
+        UserResponseDTO response = null;
+        try {
+            response = authUserService.getUserInfo("dummyToken");
+        } catch (UserNotAuthenticatedException e) {
+            throw new RuntimeException(e);
+        }
 
-        assertNotNull(response);
-        assertEquals("Bem-vindo, testUser!", response.getMessage());
+        assertEquals("Welcome, testUser!", response.getMessage());
     }
 
     @Test
-    void unauthenticatedUser() {
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.isAuthenticated()).thenReturn(false);
+    void getUserInfo_ShouldThrowException_WhenUserIsNotAuthenticated() {
+        when(securityContext.getAuthentication()).thenReturn(null);
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> authUserService.getUserInfo("token"));
-        assertEquals("Usuário não autenticado", exception.getMessage());
+        assertThrows(UserNotAuthenticatedException.class, () -> authUserService.getUserInfo("dummyToken"));
     }
 
     @Test
-    void adminAccess() {
+    void adminAccess_ShouldReturnAdminAccess_WhenUserHasNoRoleUser() {
+        // Arrange
         when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getAuthorities()).thenReturn(Collections.emptyList());
+        when(authentication.getAuthorities()).thenReturn((Collection) Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN")));
 
         String response = authUserService.adminAccess();
 
-        assertEquals("Acesso admin", response);
+        assertEquals("Admin access", response);
     }
 
     @Test
-    void accessDenied() {
-        GrantedAuthority userRole = () -> "ROLE_USER";
+    void adminAccess_ShouldThrowException_WhenUserHasRoleUser() {
         when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getAuthorities()).thenAnswer(invocation -> List.of(userRole));
+        when(authentication.getAuthorities()).thenReturn((Collection) Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
 
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> authUserService.adminAccess());
-        assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
-        assertEquals("403 FORBIDDEN \"Acesso negado para usuários com o papel ROLE_USER\"", exception.getMessage());
+        assertThrows(UserInvalidDataException.class, () -> authUserService.adminAccess());
+    }
+
+    @Test
+    void deleteResource_ShouldThrowException_WhenResourceDoesNotExist() {
+        assertThrows(UserResourceNotFoundException.class, () -> authUserService.deleteResource(1L));
+    }
+
+    @Test
+    void getUserInfo_ShouldThrowException_WhenAuthenticationIsNull() {
+        when(securityContext.getAuthentication()).thenReturn(null);
+
+        assertThrows(UserNotAuthenticatedException.class, () -> authUserService.getUserInfo("dummyToken"));
+    }
+
+    @Test
+    void getUserInfo_ShouldThrowException_WhenAuthenticationIsNotAuthenticated() {
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.isAuthenticated()).thenReturn(false);
+
+        assertThrows(UserNotAuthenticatedException.class, () -> authUserService.getUserInfo("dummyToken"));
     }
 }

@@ -5,6 +5,6 @@ import br.com.tax_calculator_API.dtos.JwtResponseDTO;
 import br.com.tax_calculator_API.dtos.UserLoginDTO;
 
 public interface AuthService {
-    JwtResponseDTO login(UserLoginDTO userLoginDTO);
+    JwtResponseDTO login (UserLoginDTO userLoginDTO);
 
 }

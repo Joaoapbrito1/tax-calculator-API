@@ -2,9 +2,11 @@ package br.com.tax_calculator_API.services;
 
 import br.com.tax_calculator_API.dtos.UserRequestDTO;
 import br.com.tax_calculator_API.enums.UserRole;
+import br.com.tax_calculator_API.exeptions.UserAlreadyExistsException;
 import br.com.tax_calculator_API.models.UserModel;
 import br.com.tax_calculator_API.repository.UserRepository;
 import br.com.tax_calculator_API.repository.UserRoleRepository;
+import br.com.tax_calculator_API.services.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -69,7 +71,8 @@ class UserServiceImplTest {
     void runtimeException() {
         when(userRepository.existsByUsername(userRequestDTO.getUsername())).thenReturn(true);
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> userService.registerUser(userRequestDTO));
-        assertEquals("Unprocess Entity", exception.getMessage());
+        UserAlreadyExistsException exception = assertThrows(UserAlreadyExistsException.class, () -> userService.registerUser(userRequestDTO));
+
+        assertEquals("User already registered with the username: testuser", exception.getMessage());
     }
 }

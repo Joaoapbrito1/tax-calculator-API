@@ -111,7 +111,7 @@
 		<dependency>
 			<groupId>org.jacoco</groupId>
 			<artifactId>jacoco-maven-plugin</artifactId>
-			<version>0.8.8</version>
+			<version>0.8.12</version>
 		</dependency>
 	</dependencies>
 
@@ -141,10 +141,15 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.8</version>
+				<version>0.8.12</version>
 				<configuration>
 					<excludes>
 						<exclude>**/*SecurityConfig.class</exclude>
+						<exclude>br/com/tax_calculator_API/exeptions/**</exclude>
+						<exclude>br/com/tax_calculator_API/enums/**</exclude>
+						<exclude>br/com/tax_calculator_API/dtos/**</exclude>
+						<exclude>br/com/tax_calculator_API/models/**</exclude>
+						<exclude>br/com/tax_calculator_API/infra/swegger/**</exclude>
 					</excludes>
 				</configuration>
 				<executions>

@@ -1,11 +1,13 @@
-package br.com.tax_calculator_API.services;
+package br.com.tax_calculator_API.services.impl;
 
 
 import br.com.tax_calculator_API.dtos.UserRequestDTO;
+import br.com.tax_calculator_API.exeptions.UserAlreadyExistsException;
 import br.com.tax_calculator_API.models.UserModel;
 import br.com.tax_calculator_API.models.UserRoleModel;
 import br.com.tax_calculator_API.repository.UserRepository;
 import br.com.tax_calculator_API.repository.UserRoleRepository;
+import br.com.tax_calculator_API.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,7 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl{
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserRoleRepository roleRepository;
@@ -22,7 +24,7 @@ public class UserServiceImpl{
 
     public void registerUser(UserRequestDTO userRequestDTO) {
         if (userRepository.existsByUsername(userRequestDTO.getUsername())) {
-            throw new RuntimeException("Unprocess Entity");
+            throw new UserAlreadyExistsException("User already registered with the username: " + userRequestDTO.getUsername());
         }
 
         UserModel user = new UserModel();

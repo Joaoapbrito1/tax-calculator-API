@@ -11,11 +11,13 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 @Configuration
 @EnableMethodSecurity
@@ -23,10 +25,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private UserDetailsService userDetailsService;
-
     private JwtAuthenticationEntryPoint authenticationEntryPoint;
-
     private JwtAuthenticationFilter authenticationFilter;
+    private AccessDeniedHandler accessDeniedHandler;
 
     @Bean
     public static PasswordEncoder passwordEncoder(){
@@ -36,15 +37,24 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.csrf(csrf -> csrf.disable())
+        http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> {
-                    authorize.requestMatchers("/user/login").permitAll();
-                    authorize.requestMatchers( "/user/register").permitAll();
+                    authorize.requestMatchers("/api/user/login").permitAll();
+                    authorize.requestMatchers( "/api/user/register").permitAll();
+                    authorize.requestMatchers(HttpMethod.GET, "/api/tipos").authenticated();
+                    authorize.requestMatchers(HttpMethod.GET, "/api/tipos/{id}").authenticated();
+                    authorize.requestMatchers(HttpMethod.POST, "/api/tipos").hasRole("ADMIN");
+                    authorize.requestMatchers(HttpMethod.PUT, "/api/tipos").hasRole("ADMIN");
+                    authorize.requestMatchers(HttpMethod.POST, "/api/tipos/calculo").hasRole("ADMIN");
+                    authorize.requestMatchers(HttpMethod.DELETE, "/api/tipos/{id}").hasRole("ADMIN");
+                    authorize.requestMatchers( "/v3/api-docs/**","swagger-ui/**","swagger-ui.html").permitAll();
                     authorize.anyRequest().authenticated();
                 }).httpBasic(Customizer.withDefaults());
 
         http.exceptionHandling( exception -> exception
-                .authenticationEntryPoint(authenticationEntryPoint));
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .accessDeniedHandler(accessDeniedHandler)
+        );
 
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
