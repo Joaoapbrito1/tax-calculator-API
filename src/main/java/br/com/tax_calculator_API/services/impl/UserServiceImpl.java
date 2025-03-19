@@ -2,6 +2,7 @@ package br.com.tax_calculator_API.services.impl;
 
 
 import br.com.tax_calculator_API.dtos.UserRequestDTO;
+import br.com.tax_calculator_API.exeptions.UserAlreadyExistsException;
 import br.com.tax_calculator_API.models.UserModel;
 import br.com.tax_calculator_API.models.UserRoleModel;
 import br.com.tax_calculator_API.repository.UserRepository;
@@ -23,7 +24,7 @@ public class UserServiceImpl implements UserService {
 
     public void registerUser(UserRequestDTO userRequestDTO) {
         if (userRepository.existsByUsername(userRequestDTO.getUsername())) {
-            throw new RuntimeException("Unprocess Entity");
+            throw new UserAlreadyExistsException("User already registered with the username: " + userRequestDTO.getUsername());
         }
 
         UserModel user = new UserModel();
