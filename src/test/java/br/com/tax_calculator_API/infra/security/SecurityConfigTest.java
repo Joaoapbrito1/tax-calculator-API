@@ -2,7 +2,6 @@ package br.com.tax_calculator_API.infra.security;
 
 import br.com.tax_calculator_API.infra.jwt.JwtAuthenticationEntryPoint;
 import br.com.tax_calculator_API.infra.jwt.JwtAuthenticationFilter;
-import br.com.tax_calculator_API.infra.security.SecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
