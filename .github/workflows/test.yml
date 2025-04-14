@@ -24,3 +24,5 @@ jobs:
 
       - name: Build e rodar testes
         run: ./mvnw test
+        env:
+          SPRING_PROFILES_ACTIVE: test
