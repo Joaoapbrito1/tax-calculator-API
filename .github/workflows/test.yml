@@ -23,6 +23,4 @@ jobs:
         run: chmod +x mvnw
 
       - name: Build e rodar testes
-        run: ./mvnw test
-        env:
-          SPRING_PROFILES_ACTIVE: test
+        run: ./mvnw test -Dspring.profiles.active=test
