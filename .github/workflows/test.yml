@@ -3,7 +3,7 @@ name: Run Tests on Merge to Developer
 on:
   push:
     branches:
-      - developer  # dispara apenas quando houver push na branch developer
+      - developer
 
 jobs:
   run-tests:
@@ -16,8 +16,11 @@ jobs:
       - name: Configurar JDK
         uses: actions/setup-java@v3
         with:
-          java-version: '17' # ou a versão do seu projeto
+          java-version: '17'
           distribution: 'temurin'
 
+      - name: Dar permissão de execução ao mvnw
+        run: chmod +x mvnw
+
       - name: Build e rodar testes
-        run: ./mvnw test # ou 'mvn test' se você usa Maven instalado diretamente
+        run: ./mvnw test
