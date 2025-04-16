@@ -4,23 +4,29 @@ on:
   push:
     branches:
       - developer
+  pull_request: # Adicionado para rodar também em Pull Requests
+    branches:
+      - developer
 
 jobs:
   run-tests:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout código
+      - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Importante para analisar mudanças incrementais
 
-      - name: Configurar JDK
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: maven # Adiciona cache do Maven para acelerar builds
 
-      - name: Dar permissão de execução ao mvnw
+      - name: Grant execute permission for mvnw
         run: chmod +x mvnw
 
-      - name: Build e rodar testes
-        run: ./mvnw test -Dspring.profiles.active=test
+      - name: Run tests
+        run: ./mvnw test -B -c -Dspring.profiles.active=test
