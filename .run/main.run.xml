@@ -3,11 +3,12 @@
     <envs>
       <env name="DB_HOST" value="localhost" />
       <env name="DB_NAME" value="calculadora_imposto" />
-      <env name="DB_PASSWORD" value="senha123" />
-      <env name="DB_URL" value="jdbc:postgresql://localhost:5432/calculadora_imposto" />
-      <env name="DB_USER" value="postgres" />
-      <env name="JWT_SECRET" value="Cc1TqqOVLIjj/cSggo22/wFZYJpLT5WNnrpwmCgdQK9ruAaSiWSf1D+EqtvlsP393FOOgJcYSnXQBt3yM4/m+Q==" />
       <env name="JWT_EXPIRATION" value="3600000" />
+      <env name="JWT_SECRET" value="Cc1TqqOVLIjj/cSggo22/wFZYJpLT5WNnrpwmCgdQK9ruAaSiWSf1D+EqtvlsP393FOOgJcYSnXQBt3yM4/m+Q==" />
+      <env name="SPRING_APPLICATION_NAME" value="tax-calculator-API" />
+      <env name="SPRING_DATASOURCE_PASSWORD" value="senha123" />
+      <env name="SPRING_DATASOURCE_URL" value="jdbc:postgresql://localhost:5432/calculadora_imposto" />
+      <env name="SPRING_DATASOURCE_USERNAME" value="postgres" />
     </envs>
     <option name="envFilePaths">
       <option value="$PROJECT_DIR$/.env" />
