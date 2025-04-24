@@ -4,7 +4,6 @@ import br.com.tax_calculator_API.controlles.UserController;
 import br.com.tax_calculator_API.dtos.JwtResponseDTO;
 import br.com.tax_calculator_API.dtos.UserLoginDTO;
 import br.com.tax_calculator_API.dtos.UserRequestDTO;
-import br.com.tax_calculator_API.enums.UserRole;
 import br.com.tax_calculator_API.exeptions.UserAlreadyExistsException;
 import br.com.tax_calculator_API.services.AuthService;
 import br.com.tax_calculator_API.services.impl.UserServiceImpl;
@@ -16,8 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -40,7 +37,7 @@ class UserControllerTest {
 
     @BeforeEach
     void setUp() {
-        userLoginDTO = new UserLoginDTO("testuser", "password");
+        userLoginDTO = new UserLoginDTO();
         jwtResponseDTO = new JwtResponseDTO("fake-jwt-token");
     }
 
