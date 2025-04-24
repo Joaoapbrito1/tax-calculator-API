@@ -1,15 +1,19 @@
+name: Java CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
       SPRING_APPLICATION_NAME: tax-calculator-api
-      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/calculadora_imposto
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: senha123
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
-      JWT_SECRET: Cc1TqqOVLIjj/cSggo22/wFZYJpLT5WNnrpwmCgdQK9ruAaSiWSf1D+EqtvlsP393FOOgJcYSnXQBt3yM4/m+Q==
+      JWT_SECRET: fake-secret-for-test
       JWT_EXPIRATION: 3600000
 
     steps:
@@ -33,6 +37,5 @@ jobs:
       - name: Build with Maven
         run: mvn -B clean install
 
-      - name: Run tests
-        run: mvn test
-on:
+      - name: Run tests using H2 profile
+        run: mvn test -Dspring.profiles.active=test
