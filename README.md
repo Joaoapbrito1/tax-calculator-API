@@ -50,7 +50,5 @@ Follow the steps below to run the application locally:
 
     - The application will be available at: [http://localhost:8080](http://localhost:8080)
     - Swagger documentation will be available at: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
-   
 
-4. **Testanto actions**
 
